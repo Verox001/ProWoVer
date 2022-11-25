@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="ProWoVer" uuid="d7c5c03d-48ae-402a-807d-8adb00f1aabc">
+    <data-source source="LOCAL" name="@cc1.cimeyclust.com" uuid="a209db43-5b4e-4579-96f1-a95d232be47c">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
-      <imported>true</imported>
-      <remarks>$PROJECT_DIR$/proWoVer/settings.py</remarks>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://cc1.cimeyclust.com:3306/ProWoVer</jdbc-url>
+      <jdbc-url>jdbc:mysql://cc1.cimeyclust.com:3306</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>
