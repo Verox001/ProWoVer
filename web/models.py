@@ -38,6 +38,7 @@ class Project(models.Model):
     description = models.TextField(max_length=8000)
     role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES)
     attendance = models.IntegerField()
+    price = models.FloatField(default=0.0)
     other = models.TextField(max_length=255, blank=True)
 
     def __str__(self):

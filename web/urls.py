@@ -5,4 +5,5 @@ from web import views
 
 urlpatterns = [
     path("", views.Index.as_view()),
+    path("login/", views.LoginView.as_view()),
 ]
