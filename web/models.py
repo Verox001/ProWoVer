@@ -9,21 +9,28 @@ __all__ = [
 ]
 
 # Create years as groups
-for year in range(7, 11):
+group = Group.objects.get_or_create(name="5/6")
+for year in range(7, 13):
     group = Group.objects.get_or_create(name=str(year))
 
 
 class Project(models.Model):
-    YEAR7 = 1
-    YEAR8 = 2
-    YEAR9 = 3
-    YEAR10 = 4
+    YEAR56 = 1
+    YEAR7 = 2
+    YEAR8 = 3
+    YEAR9 = 4
+    YEAR10 = 5
+    YEAR11 = 6
+    YEAR12 = 7
 
     ROLE_CHOICES = (
+        (YEAR56, '5./6. Jahrgang'),
         (YEAR7, '7. Jahrgang'),
         (YEAR8, '8. Jahrgang'),
         (YEAR9, '9. Jahrgang'),
         (YEAR10, '10. Jahrgang'),
+        (YEAR11, '11. Jahrgang'),
+        (YEAR12, '12. Jahrgang'),
     )
 
     project_id = models.BigAutoField(primary_key=True)
@@ -47,9 +54,9 @@ class User(AbstractUser):
     )
     role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, default=STUDENT)
     user_id = models.BigAutoField(primary_key=True)
-    email = models.EmailField(max_length=255, unique=True)
+    email = models.EmailField(max_length=255, unique=True, blank=True, null=True)
     password = models.TextField(max_length=8000)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.username
