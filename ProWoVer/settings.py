@@ -28,7 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-AUTH_USER_MODEL = 'web.User'
+AUTH_USER_MODEL = 'manager.User'
 
 
 # Application definition
@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'web'
+    'manager'
 ]
 
 MIDDLEWARE = [

@@ -1,6 +1,6 @@
 from django import forms
 
-from models import User
+from .models import User
 
 
 class LoginForm(forms.Form):
@@ -11,4 +11,3 @@ class LoginForm(forms.Form):
         print(self)
         users = User.objects.filter(username=self.username)
         user: User = users.first()
-
