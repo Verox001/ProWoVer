@@ -11,7 +11,14 @@ class Index(View):
     template = 'auth/login.html'
 
     def get(self, request):
-        return render(request, self.template)
+        if request.GET.get("success") is not None:
+            if request.GET.get("success") == "1":
+                return render(request, self.template, context={"success": True})
+            elif request.GET.get("success") == "0":
+                return render(request, self.template, context={"failed": True})
+            return render(request, self.template, context={"success": False})
+        return render(request, self.template, context={"success": False})
+
 
 
 class LoginView(View):
@@ -21,4 +28,6 @@ class LoginView(View):
         form = LoginForm(request.POST)
         print(form.is_valid())
         if form.is_valid():
-            return HttpResponseRedirect('/thanks/')
+            return HttpResponseRedirect('/?success=1')
+        else:
+            return HttpResponseRedirect('/?success=0')

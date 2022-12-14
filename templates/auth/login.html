@@ -3,13 +3,19 @@
 
 {% block content %}
 <div class="text-center" style="margin: 0 20% 0 20%">
+    {% if failed %}
+    <div class="alert alert-danger" role="alert">
+        Dein Nutzername oder Passwort waren inkorrekt. Bitte versuche es erneut.
+    </div>
+    {% endif %}
+    {% if not success %}
     <form method="post" action="/login/">
         {% csrf_token %}
         {{loginform}}
         <div class="form-group">
             <!--<label for="username">Nutzername</label>-->
             <input type="text" class="form-control" id="username" name="username" aria-describedby="emailHelp" placeholder="Benutzername">
-            <small id="anmerkung" class="form-text text-muted">We'll never share your email with anyone else.</small>
+            <!--<small id="anmerkung" class="form-text text-muted">We'll never share your email with anyone else.</small>-->
         </div>
         <br>
         <div class="form-group">
@@ -19,5 +25,9 @@
         <br>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
+    {% endif %}
+    {% if success %}
+    Success
+    {% endif %}
 </div>
 {% endblock %}
