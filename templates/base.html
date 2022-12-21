@@ -8,30 +8,22 @@
     <title>{% block title %}Gustav-Heinemann-Oberschule{% endblock %}</title>
 </head>
 <body>
-<div id="header">
-    <nav class="navbar navbar-expand-lg navbar-light">
-        <a class="navbar-brand" href="https://gho.berlin"><image src="{% static 'images/logo.png' %}"></image></a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav">
-                <li class="nav-item active">
-                    <a class="nav-link" href="https://gho.berlin">Home</a>
+<div id="header" class="text-dark row container" style="text-align: center;">
+    <div class="col-3">
+        <nav class="navbar navbar-light">
+            <ul class="navbar-nav d-flex flex-row">
+                <li>
+                    <a class="navbar-brand" href="https://gho.berlin"><image style="width: 100%; height: auto;" src="{% static 'images/logo.png' %}"></image></a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/">Login</a>
+                <li class="nav-link">
+                    <button class="btn btn-outline-success" onclick="window.location=/logout/">Logout</button>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/choose-project">Projekt wählen</a>
-                </li>
-                <button class="btn btn-outline-success">Logout</button>
             </ul>
-        </div>
-    </nav>
-</div>
-<div id="content" class="p-3 mb-2 text-dark container">
-    {% block content %}{% endblock %}
+        </nav>
+    </div>
+    <div id="content" class="p-3 mb-2 text-dark col-8" style="margin-top: 50px">
+        {% block content %}{% endblock %}
+    </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 </body>

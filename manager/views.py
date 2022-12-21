@@ -1,4 +1,4 @@
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.contrib.auth.models import AnonymousUser
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -13,12 +13,11 @@ class Index(View):
     template = 'auth/login.html'
 
     def get(self, request):
-        print(request.user)
-        if request.user != AnonymousUser:
+        if not isinstance(request.user, AnonymousUser):
             return render(request, self.template, context={"success": True, "teacher": request.user.role == request.user.TEACHER})
         if request.GET.get("success") is not None:
             if request.GET.get("success") == "1":
-                return render(request, self.template, context={"success": True, "teacher": request.user.role == request.user.TEACHER})
+                return render(request, self.template, context={"logged_out": True})
             elif request.GET.get("success") == "0":
                 return render(request, self.template, context={"failed": True})
 
@@ -29,6 +28,12 @@ class LoginView(View):
         form = LoginForm(request.POST)
         if form.is_valid():
             login(request=request, user=form.get_user())
-            return HttpResponseRedirect('/?success=1')
+            return HttpResponseRedirect('/')
         else:
             return HttpResponseRedirect('/?success=0')
+
+
+class LogoutView(View):
+    def get(self, request):
+        logout(request)
+        return HttpResponseRedirect('/?success=1')

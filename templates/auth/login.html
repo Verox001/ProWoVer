@@ -8,6 +8,11 @@
         Dein Nutzername oder Passwort waren inkorrekt. Bitte versuche es erneut.
     </div>
     {% endif %}
+    {% if logged_out %}
+    <div class="alert alert-success" role="alert">
+        Du hast dich erfolgreich abgemeldet oder warst bereits abgemeldet.
+    </div>
+    {% endif %}
     {% if not success %}
     <form method="post" action="/login/">
         {% csrf_token %}
@@ -31,7 +36,23 @@
     Sie haben sich erfolgreich als Lehrer eingeloggt!
     {% endif %}
     {% if not teacher %}
-    Sie haben sich erfolgreich als Schüler eingeloggt!
+    <form method="post" action="/login/">
+        {% csrf_token %}
+        {{loginform}}
+        <div class="form-group">
+            <!--<label for="username">Nutzername</label>-->
+            <input type="text" class="form-control" id="username" name="username" aria-describedby="emailHelp" placeholder="Benutzername">
+            <!--<small id="anmerkung" class="form-text text-muted">We'll never share your email with anyone else.</small>-->
+        </div>
+        <br>
+        <div class="form-group">
+            <!--<label for="password">Password</label>-->
+            <input type="password" class="form-control" id="password" name="password" placeholder="Passwort">
+        </div>
+        <br>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    Du hast Dich erfolgreich als Schüler eingeloggt!
     {% endif %}
     {% endif %}
 </div>
