@@ -1,5 +1,8 @@
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group, AbstractUser
-from django.db import models
+from django.db import models, IntegrityError
+import csv
+
 
 # Create your models here.
 YEAR56 = 1
@@ -41,6 +44,13 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
 
+
+'''with open("KuK_SuS_Einsatz.csv", "r") as f:
+    reader = csv.reader(f)
+    for line in reader:
+        try:
+            User.objects.get_or_create(username=line[0], students=int(line[1]), password=make_password(line[2]), role=2)
+        except IntegrityError: pass'''
 
 class Project(models.Model):
     DAZS = (

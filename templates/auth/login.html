@@ -27,7 +27,12 @@
     </form>
     {% endif %}
     {% if success %}
-    Success
+    {% if teacher %}
+    Sie haben sich erfolgreich als Lehrer eingeloggt!
+    {% endif %}
+    {% if not teacher %}
+    Sie haben sich erfolgreich als Schüler eingeloggt!
+    {% endif %}
     {% endif %}
 </div>
 {% endblock %}
