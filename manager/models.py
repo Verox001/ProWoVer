@@ -23,9 +23,11 @@ ROLE_CHOICES = (
     (YEAR12, '12. Jahrgang'),
 )
 
-class Years(models.Model):
+
+class Year(models.Model):
     year = models.PositiveBigIntegerField(choices=ROLE_CHOICES, primary_key=True)
     students = models.IntegerField()
+
 
 class User(AbstractUser):
     TEACHER = 2
@@ -52,6 +54,7 @@ class User(AbstractUser):
             User.objects.get_or_create(username=line[0], students=int(line[1]), password=make_password(line[2]), role=2)
         except IntegrityError: pass'''
 
+
 class Project(models.Model):
     DAZS = (
         (1, "Für Sprachlerner geeignet"),
@@ -62,7 +65,6 @@ class Project(models.Model):
     project_id = models.BigAutoField(primary_key=True)
     title = models.TextField(max_length=255)
     description = models.TextField(max_length=8000)
-    role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES)
     attendance = models.IntegerField()
     price = models.FloatField(default=0.0)
     dazs = models.PositiveSmallIntegerField(choices=DAZS, default=1)
@@ -73,7 +75,17 @@ class Project(models.Model):
 
 
 class ProjectUserConnection(models.Model):
+    first = 1
+    second = 2
+    third = 3
+
+    PRIORITY = (
+        (first, 'Erstwunsch'),
+        (second, 'Zweitwunsch'),
+        (third, 'Drittwunsch'),
+    )
     project_user_connection_id = models.BigAutoField(primary_key=True)
+    priority = models.PositiveSmallIntegerField(choices=PRIORITY, blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     is_partner = models.BooleanField(default=False)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)

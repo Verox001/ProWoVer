@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% block title %}GHO - Projekte{% endblock %}
+
+{% block content %}
+<div class="text-center" style="margin: 0 20% 0 20%">
+    {% if failed %}
+    <div class="alert alert-danger" role="alert">
+        Dein Nutzername oder Passwort waren inkorrekt. Bitte versuche es erneut.
+    </div>
+    {% endif %}
+    {% if logged_out %}
+    <div class="alert alert-success" role="alert">
+        Du hast dich erfolgreich abgemeldet oder warst bereits abgemeldet.
+    </div>
+    {% endif %}
+    {% if not success %}
+    <form method="post" action="/login/">
+        {% csrf_token %}
+        <div class="form-group">
+            <!--<label for="username">Nutzername</label>-->
+            <input type="text" class="form-control" id="username" name="username" placeholder="Benutzername">
+            <!--<small id="anmerkung" class="form-text text-muted">We'll never share your email with anyone else.</small>-->
+        </div>
+        <br>
+        <div class="form-group">
+            <!--<label for="password">Password</label>-->
+            <input type="password" class="form-control" id="password" name="password" placeholder="Passwort">
+        </div>
+        <br>
+        <button type="submit" class="btn btn-primary">Einloggen</button>
+    </form>
+    {% endif %}
+    {% if success %}
+    {% if teacher %}
+    <h2>Erstellen / Aktualisieren Sie ein Projekt oder bitten Sie eine andere Lehrkraft,
+        als Mitbetreuer eines Projektes eingetragen zu werden.
+    </h2>
+    <br>
+    {% if saving_failed %}
+    <div class="alert alert-danger" role="alert">
+        Etwas ist schief gelaufen: {{error_message}}
+    </div>
+    {% endif %}
+    {% if saving_succeed %}
+    <div class="alert alert-success" role="alert">
+        Ihre Änderungen wurden erfolgreich gespeichert.
+    </div>
+    {% endif %}
+    {% if left_success %}
+    <div class="alert alert-success" role="alert">
+        Sie haben das Projekt, in dem Sie eingeteilt waren, erfolgreich verlassen.
+    </div>
+    {% endif %}
+    {% if left_error %}
+    <div class="alert alert-danger" role="alert">
+        Sie konnten das Projekt nicht verlassen.
+    </div>
+    {% endif %}
+    <form method="post" action="/update-project/">
+        {% csrf_token %}
+        <div class="form-group">
+            <input type="text" class="form-control" id="title" name="title" placeholder="Projekttitel" value="{{title}}" required>
+        </div>
+        <br>
+        <div class="form-group">
+            <textarea class="form-control" id="description" name="description" placeholder="Projektbeschreibung" rows="3" required>{{description}}</textarea>
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="dazs">Eignung für Integrationsklassen</label>
+            <select class="form-select form-select-sm mb-3" aria-label=".form-select-lg dazs" name="dazs" id="dazs" required>
+                {% for key, value in dazs_list %}
+                <option value="{{key}}" {%if key == dazs %}selected{% endif %}>{{value}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="attendance">Wie viele Schüler dürfen maximal an dem Projekt teilnehmen?</label>
+            <input type="number" class="form-control" id="attendance" value="{{attendance}}" name="attendance" min="5" max="50" required>
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="attendance">Wie viel Budget benötigt die Umsetzung Ihres Projektes? (in EUR)</label>
+            <input type="number" class="form-control" id="price" value="{{price}}" name="price" min="0" required>
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="other">Falls nötig, geben Sie weitere Informationen über das Projekt an. (Nicht sichtbar für Schüler)</label>
+            <textarea class="form-control" id="other" name="other" placeholder="Weiteres" rows="2">{{other}}</textarea>
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="partner">Wählen Sie eine unterstützende Lehrkraft aus. (optional) ACHTUNG: Bitte sprechen Sie dies erst mit der anderen, betreffenden Lehrkraft ab.</label>
+            <select class="form-select form-select-sm mb-3" aria-label=".form-select-lg dazs" name="partner" id="partner" {%if not permitted %}disabled{% endif %}>
+                <option disabled selected value hidden> -- Wählen Sie eine zweite Lehrkraft -- </option>
+                {% for key, value in teachers %}
+                <option value="{{key}}" {%if key == partner %}selected{% endif %}>{{value}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <br>
+        <button type="submit" class="btn btn-primary">Speichern</button>
+        {%if not permitted %}
+        <a href="/leave-project/" role="button" class="btn btn-danger">Projekt verlassen</a>
+        {% endif %}
+    </form>
+    {% endif %}
+    {% if not teacher %}
+    <h2>Wähle je ein Projekt aus jeder Listen. Projektwünsche dürfen nicht doppelt angegeben werden.</h2>
+    <br>
+    {% if saving_failed %}
+    <div class="alert alert-danger" role="alert">
+        Etwas ist schief gelaufen: {{error_message}}
+    </div>
+    {% endif %}
+    {% if saving_succeed %}
+    <div class="alert alert-success" role="alert">
+        Deine Änderungen wurden erfolgreich gespeichert.
+    </div>
+    {% endif %}
+    <form method="post" action="/choose-project/">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="first_project" style="font-size: 25px">Erster Projektwunsch</label>
+            <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg first-project" name="first_project" id="first_project" required>
+                <option disabled selected value hidden> -- Wähle ein Projekt -- </option>
+                {% for key, value in projects %}
+                    <option value="{{key}}">{{value}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="second_project" style="font-size: 25px">Zweiter Projektwunsch</label>
+            <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg second-project" name="second_project" id="second_project" required>
+                <option disabled selected value hidden> -- Wähle ein Projekt -- </option>
+                {% for key, value in projects %}
+                <option value="{{key}}">{{value}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="third_project" style="font-size: 25px">Dritter Projektwunsch</label>
+            <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg third-project" name="third_project" id="third_project" required>
+                <option disabled selected value hidden> -- Wähle ein Projekt -- </option>
+                {% for key, value in projects %}
+                <option value="{{key}}">{{value}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <br>
+        <button type="submit" class="btn btn-primary">Speichern</button>
+    </form>
+    {% endif %}
+    {% endif %}
+</div>
+{% endblock %}

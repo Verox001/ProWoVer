@@ -1,4 +1,4 @@
-from models import Project
+from manager.models import Project
 
 
 def get_project_choices():
