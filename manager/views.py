@@ -134,6 +134,8 @@ class ProjectCreationView(View):
             form.partner.choices = teachers
             if not projects.first().is_partner:
                 form.permitted = True
+        else:
+            form.permitted = True
         if form.is_valid():
             if len(projects) == 0:
                 ProjectUserConnection.objects.create(project=form.project, user=request.user)
