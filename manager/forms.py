@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth import authenticate
 from django.core.exceptions import ObjectDoesNotExist
 
-from helper import get_project_choices
+from manager.helper import get_project_choices
 from manager.models import User, Project, ProjectUserConnection, Year
 
 

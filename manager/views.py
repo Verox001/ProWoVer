@@ -6,7 +6,7 @@ from django.shortcuts import render
 from django.views import View
 from django.views.generic import FormView
 
-from helper import get_project_choices
+from manager.helper import get_project_choices
 from manager.models import Project, ProjectUserConnection, User, Year, ROLE_CHOICES
 from .forms import LoginForm, ProjectSelectionForm, ProjectCreationForm
 
