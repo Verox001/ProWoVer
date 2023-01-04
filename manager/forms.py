@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate
 from django.core.exceptions import ObjectDoesNotExist
 
 from helper import get_project_choices
-from manager.models import User, Project, ProjectUserConnection
+from manager.models import User, Project, ProjectUserConnection, Year
 
 
 class LoginForm(forms.Form):
@@ -58,6 +58,7 @@ class ProjectCreationForm(forms.Form):
     price = forms.FloatField()
     other = forms.CharField(widget=forms.Textarea(attrs={"rows": "2"}))
     partner = forms.Select()
+    year = forms.Select()
     error_message = ""
     permitted = False
     project = None
@@ -72,21 +73,22 @@ class ProjectCreationForm(forms.Form):
                     dazs=int(self.data["dazs"]),
                     attendance=int(self.data["attendance"]),
                     price=float(self.data["price"]),
-                    other=self.data["other"]
+                    other=self.data["other"],
+                    year=Year.objects.get(year=self.data["year"])
                 )
             else:
                 old_partners = ProjectUserConnection.objects.filter(project=self.project, is_partner=True)
                 if len(old_partners) > 0:
                     old_partner = old_partners.first().user
-                self.project = Project.objects.update_or_create(
-                    pk=self.project.pk,
+                Project.objects.filter(pk=self.project.pk).update(
                     title=self.data["title"],
                     description=self.data["description"],
                     dazs=int(self.data["dazs"]),
                     attendance=int(self.data["attendance"]),
                     price=float(self.data["price"]),
-                    other=self.data["other"]
-                )[0]
+                    other=self.data["other"],
+                    year=Year.objects.get(year=self.data["year"])
+                )
             if self.permitted:
                 if "partner" in self.data:
                     partner = User.objects.get(pk=int(self.data["partner"]))

@@ -27,6 +27,7 @@ ROLE_CHOICES = (
 class Year(models.Model):
     year = models.PositiveBigIntegerField(choices=ROLE_CHOICES, primary_key=True)
     students = models.IntegerField()
+    projects = models.IntegerField()
 
 
 class User(AbstractUser):
@@ -69,6 +70,7 @@ class Project(models.Model):
     price = models.FloatField(default=0.0)
     dazs = models.PositiveSmallIntegerField(choices=DAZS, default=1)
     other = models.TextField(max_length=255, blank=True)
+    year = models.ForeignKey(Year, on_delete=models.CASCADE, default=Year.objects.values().first())
 
     def __str__(self):
         return self.title

@@ -7,7 +7,7 @@ from django.views import View
 from django.views.generic import FormView
 
 from helper import get_project_choices
-from manager.models import Project, ProjectUserConnection, User
+from manager.models import Project, ProjectUserConnection, User, Year, ROLE_CHOICES
 from .forms import LoginForm, ProjectSelectionForm, ProjectCreationForm
 
 
@@ -26,6 +26,7 @@ class Index(View):
             other = ""
             partner = None
             permitted = True
+            year = 0
             teachers = [(teacher.pk, teacher.username) for teacher in User.objects.filter(role=User.TEACHER)]
             teachers.sort(key=lambda a: a[1])
             if len(projects) > 0:
@@ -44,6 +45,7 @@ class Index(View):
                 attendance = project.attendance
                 price = int(project.price)
                 other = project.other
+                year = project.year.year
                 try:
                     partner = ProjectUserConnection.objects.filter(~Q(user=request.user), project=project).first().user.pk
                 except AttributeError:
@@ -63,6 +65,8 @@ class Index(View):
                 "dazs": dazs,
                 "attendance": attendance,
                 "price": price,
+                "year": year,
+                "years": [(year.year, year.get_year_display()) for year in Year.objects.all()],
                 "other": other,
                 "partner": partner,
                 "permitted": permitted,
@@ -132,6 +136,7 @@ class ProjectCreationView(View):
                 except ValueError:
                     pass
             form.partner.choices = teachers
+            form.year.choices = [(year.year, year.get_year_display()) for year in Year.objects.all()]
             if not projects.first().is_partner:
                 form.permitted = True
         else:

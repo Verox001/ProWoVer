@@ -91,8 +91,20 @@
         </div>
         <br>
         <div class="form-group">
+            <label for="year">Wählen Sie die Jahrgangsstufe aus in der dieses Projekt angeboten werden soll.</label>
+            <select class="form-select form-select-sm mb-3" aria-label=".form-select-lg dazs" name="year" id="year" required>
+                <option disabled selected value hidden> -- Wählen Sie einen Jahrgang -- </option>
+                {{year}}
+                {% for key, value in years %}
+                {{key}}
+                <option value="{{key}}" {%if key == year %}selected{% endif %}>{{value}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <br>
+        <div class="form-group">
             <label for="partner">Wählen Sie eine unterstützende Lehrkraft aus. (optional) ACHTUNG: Bitte sprechen Sie dies erst mit der anderen, betreffenden Lehrkraft ab.</label>
-            <select class="form-select form-select-sm mb-3" aria-label=".form-select-lg dazs" name="partner" id="partner" {%if not permitted %}disabled{% endif %}>
+            <select class="form-select form-select-sm mb-3" aria-label=".form-select-lg dazs" name="partner" id="partner" {%if not permitted %}disabled{% endif %} required>
                 <option disabled selected value hidden> -- Wählen Sie eine zweite Lehrkraft -- </option>
                 {% for key, value in teachers %}
                 <option value="{{key}}" {%if key == partner %}selected{% endif %}>{{value}}</option>
