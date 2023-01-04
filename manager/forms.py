@@ -67,6 +67,9 @@ class ProjectCreationForm(forms.Form):
         try:
             old_partner = None
             if self.project is None:
+                if len(Project.objects.filter(year=Year.objects.get(year=self.data["year"]))) >= Year.objects.get(year=self.data["year"]).projects:
+                    self.error_message = "Für diesen Jahrgang wurden bereits ausreichend Projekte erstellt."
+                    return False
                 self.project = Project.objects.create(
                     title=self.data["title"],
                     description=self.data["description"],
