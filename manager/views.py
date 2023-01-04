@@ -144,6 +144,17 @@ class ProjectCreationView(View):
         if form.is_valid():
             if len(projects) == 0:
                 ProjectUserConnection.objects.create(project=form.project, user=request.user)
+
+            project = Project.objects.filter(pk=form.project.pk)
+            if request.user.students + User.objects.get(pk=int(form.data["partner"])).students > project.first().attendance:
+                project.update(
+                    attendance=request.user.students + User.objects.get(pk=int(form.data["partner"])).students
+                )
+                return HttpResponseRedirect(
+                    "/?success=0&error_message=" +
+                    "Sie müssen zusammen mindestens " + str(request.user.students + User.objects.get(pk=int(form.data["partner"])).students) +
+                    " Schüler betreuen, haben aber zu wenig für das Projekt ausgewählt. Die Anzahl der teilzunehmenden Schüler wurde automatisch aktualisiert."
+                )
             return HttpResponseRedirect("/?success=1")
         return HttpResponseRedirect("/?success=0&error_message=" + form.error_message)
 
