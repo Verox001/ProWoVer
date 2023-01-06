@@ -17,7 +17,7 @@ class Index(View):
 
     def get(self, request):
         if not isinstance(request.user, AnonymousUser):
-            projects = ProjectUserConnection.objects.filter(user=request.user)
+            project_connections = ProjectUserConnection.objects.filter(user=request.user)
             title = ""
             description = ""
             dazs = 1
@@ -27,17 +27,18 @@ class Index(View):
             partner = None
             permitted = True
             year = 0
-            teachers = [(teacher.pk, teacher.username) for teacher in User.objects.filter(role=User.TEACHER)]
-            teachers.sort(key=lambda a: a[1])
-            if len(projects) > 0:
-                project = projects.first().project
-                if projects.first().is_partner:
+            teachers = [
+                (teacher.pk, teacher.username) for teacher in User.objects.filter(role=User.TEACHER)
+                .exclude(user_id__in=ProjectUserConnection.objects.all().values("user_id"))
+            ]
+            if len(project_connections) > 0:
+                project = project_connections.first().project
+
+                other_partner = ProjectUserConnection.objects.filter(project=project).exclude(user=request.user).first()
+                teachers.append((other_partner.user.pk, other_partner.user.username))
+
+                if project_connections.first().is_partner:
                     permitted = False
-                for project_connection in ProjectUserConnection.objects.filter(~Q(project=project), user__role=User.TEACHER):
-                    try:
-                        teachers.remove((project_connection.user.pk, project_connection.user.username))
-                    except ValueError:
-                        pass
 
                 title = project.title
                 description = project.description
@@ -50,6 +51,8 @@ class Index(View):
                     partner = ProjectUserConnection.objects.filter(~Q(user=request.user), project=project).first().user.pk
                 except AttributeError:
                     pass
+            # Sort Teachers by username
+            teachers.sort(key=lambda a: a[1])
 
             return render(request, self.template, context={
                 "success": True,
@@ -66,7 +69,14 @@ class Index(View):
                 "attendance": attendance,
                 "price": price,
                 "year": year,
-                "years": [(year.year, year.get_year_display()) for year in Year.objects.all()],
+                "years":
+                    [
+                        (year.year, year.get_year_display() +
+                         f" noch "
+                         f"{year.projects - len(Project.objects.filter(year=year.year))}"
+                         f" Projekte")
+                        for year in Year.objects.all()
+                    ],
                 "other": other,
                 "partner": partner,
                 "permitted": permitted,
