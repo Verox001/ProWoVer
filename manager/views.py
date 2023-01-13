@@ -29,7 +29,7 @@ class Index(View):
             year = 0
             teachers = [
                 (teacher.pk, teacher.username) for teacher in User.objects.filter(role=User.TEACHER)
-                .exclude(user_id__in=ProjectUserConnection.objects.all().values("user_id"))
+                .exclude(user_id__in=ProjectUserConnection.objects.all().values("user_id")).exclude(pk=request.user.pk)
             ]
             if len(project_connections) > 0:
                 project = project_connections.first().project
