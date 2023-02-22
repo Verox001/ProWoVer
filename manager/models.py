@@ -73,7 +73,7 @@ class Project(models.Model):
     year = models.ForeignKey(Year, on_delete=models.CASCADE, default=Year.objects.values().first())
 
     def __str__(self):
-        return self.year.get_year_display() + ": " + ProjectUserConnection.objects.filter(project=self).first().user.username + ", " + ProjectUserConnection.objects.filter(project=self)[1].user.username + "; " + str(ProjectUserConnection.objects.filter(project=self).first().user.students + ProjectUserConnection.objects.filter(project=self)[1].user.students) + " Schüler"
+        return self.year.get_year_display() + ": " + ProjectUserConnection.objects.filter(project=self).first().user.username + ", " + ProjectUserConnection.objects.filter(project=self)[1].user.username + "; " + str(self.attendance) + " Schüler"
 
 
 class ProjectUserConnection(models.Model):
