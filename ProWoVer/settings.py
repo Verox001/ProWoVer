@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-oh$%aly0en38vbm3mk)6m$yu$#)1(y_wv^(kep4r%14w1$zg*o
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['cc1.cimeyclust.com', 'gho.piratenniki.de', 'localhost']
+ALLOWED_HOSTS = ['cc1.cimeyclust.com', 'gho.piratenniki.de']
 CSRF_TRUSTED_ORIGINS = ['https://gho.piratenniki.de']
 
 AUTH_USER_MODEL = 'manager.User'
