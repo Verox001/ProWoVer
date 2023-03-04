@@ -7,7 +7,7 @@ from django.views import View
 from django.views.generic import FormView
 
 from manager.helper import get_project_choices
-from manager.models import Project, ProjectUserConnection, User, Year, ROLE_CHOICES
+from manager.models import Project, ProjectUserConnection, User, Year
 from .forms import LoginForm, ProjectSelectionForm, ProjectCreationForm
 
 
@@ -106,6 +106,21 @@ class LogoutView(View):
     def get(self, request):
         logout(request)
         return HttpResponseRedirect('/?success=1')
+
+
+class ProjectListView(View):
+    template = 'list.html'
+    def get(self, request):
+        if isinstance(request.user, AnonymousUser):
+            return HttpResponseRedirect('/')
+        projects = Project.objects.none()
+
+        if request.user.role == User.TEACHER:
+            projects = Project.objects.all().order_by("year__year")
+        else:
+            projects = Project.objects.filter(year=request.user.year)
+
+        return render(request, self.template, context={ "projects": projects })
 
 
 class ProjectSelectionView(View):

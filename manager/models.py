@@ -13,7 +13,7 @@ YEAR10 = 5
 YEAR11 = 6
 YEAR12 = 7
 
-ROLE_CHOICES = (
+YEARS = (
     (YEAR56, '5./6. Jahrgang'),
     (YEAR7, '7. Jahrgang'),
     (YEAR8, '8. Jahrgang'),
@@ -25,7 +25,7 @@ ROLE_CHOICES = (
 
 
 class Year(models.Model):
-    year = models.PositiveBigIntegerField(choices=ROLE_CHOICES, primary_key=True)
+    year = models.PositiveBigIntegerField(choices=YEARS, primary_key=True)
     students = models.IntegerField()
     projects = models.IntegerField()
 
@@ -43,6 +43,7 @@ class User(AbstractUser):
     email = models.EmailField(max_length=255, unique=True, blank=True, null=True)
     password = models.TextField(max_length=8000)
     students = models.IntegerField(default=12)
+    year = models.PositiveBigIntegerField(choices=YEARS, blank=True, null=True)
 
     def __str__(self):
         return self.username

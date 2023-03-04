@@ -4,6 +4,7 @@ from manager import views
 
 urlpatterns = [
     path("", views.Index.as_view()),
+    path("list/", views.ProjectListView.as_view()),
     path("login/", views.LoginView.as_view()),
     path("logout/", views.LogoutView.as_view()),
     path("choose-project/", views.ProjectSelectionView.as_view()),

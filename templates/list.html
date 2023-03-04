@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}GHO - Projekte{% endblock %}
+
+{% block content %}
+{% for project in projects %}
+<div class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title">{{project.title}}</h5>
+        <h6 class="card-subtitle mb-1 text-muted">{{project.get_dazs_display}}</h6>
+        <h6 class="card-subtitle mb-2 text-muted">{{project.year.get_year_display}}</h6>
+        <p class="card-text">{{project.description}}</p>
+        <a href="/" class="card-link">Für Projekt registrieren</a>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}
