@@ -77,7 +77,7 @@
         <br>
         <div class="form-group">
             <label for="attendance">Wie viele Schüler dürfen maximal an dem Projekt teilnehmen?</label>
-            <input type="number" class="form-control" id="attendance" value="{{attendance}}" name="attendance" min="5" max="50" required>
+            <input type="number" class="form-control" id="attendance" value="{{attendance}}" name="attendance" min="5" max="50" disabled required>
         </div>
         <br>
         <div class="form-group">
@@ -92,7 +92,7 @@
         <br>
         <div class="form-group">
             <label for="year">Wählen Sie die Jahrgangsstufe aus in der dieses Projekt angeboten werden soll.</label>
-            <select class="form-select form-select-sm mb-3" aria-label=".form-select-lg dazs" name="year" id="year" required>
+            <select class="form-select form-select-sm mb-3" aria-label=".form-select-lg dazs" name="year" id="year" disabled required>
                 <option disabled selected value hidden> -- Wählen Sie einen Jahrgang -- </option>
                 {{year}}
                 {% for key, value in years %}
@@ -104,7 +104,7 @@
         <br>
         <div class="form-group">
             <label for="partner">Wählen Sie eine unterstützende Lehrkraft aus. (optional) ACHTUNG: Bitte sprechen Sie dies erst mit der anderen, betreffenden Lehrkraft ab.</label>
-            <select class="form-select form-select-sm mb-3" aria-label=".form-select-lg dazs" name="partner" id="partner" {%if not permitted %}disabled{% endif %} required>
+            <select class="form-select form-select-sm mb-3" aria-label=".form-select-lg dazs" name="partner" id="partner" {%if not permitted %}disabled{% endif %} disabled required>
                 <option disabled selected value hidden> -- Wählen Sie eine zweite Lehrkraft -- </option>
                 {% for key, value in teachers %}
                 <option value="{{key}}" {%if key == partner %}selected{% endif %}>{{value}}</option>
