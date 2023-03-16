@@ -95,10 +95,6 @@ class Index(View):
 class LoginView(View):
     def post(self, request):
         form = LoginForm(request.POST)
-
-        login(request=request, user=User.objects.get(username="Guld"))
-        return HttpResponseRedirect('/')
-
         if form.is_valid():
             login(request=request, user=form.get_user())
             return HttpResponseRedirect('/')
