@@ -83,15 +83,17 @@ class ProjectCreationForm(forms.Form):
                 old_partners = ProjectUserConnection.objects.filter(project=self.project, is_partner=True)
                 if len(old_partners) > 0:
                     old_partner = old_partners.first().user
+
                 Project.objects.filter(pk=self.project.pk).update(
                     title=self.data["title"],
                     description=self.data["description"],
                     dazs=int(self.data["dazs"]),
-                    attendance=int(self.data["attendance"]),
+                    attendance=int(self.data.get("attendance", self.project.attendance)),
                     price=float(self.data["price"]),
                     other=self.data["other"],
-                    year=Year.objects.get(year=self.data["year"])
+                    year=Year.objects.get(year=self.data.get("year", self.project.year.year))
                 )
+
             if self.permitted:
                 if "partner" in self.data:
                     partner = User.objects.get(pk=int(self.data["partner"]))
@@ -99,8 +101,10 @@ class ProjectCreationForm(forms.Form):
                         ProjectUserConnection.objects.filter(project=self.project, user=old_partner).delete()
                     ProjectUserConnection.objects.create(project=self.project, user=partner, is_partner=True)
                 else:
-                    if old_partner is not None:
-                        ProjectUserConnection.objects.filter(project=self.project, user=old_partner).delete()
+                    data = self.data.copy()
+                    data["partner"] = old_partner.pk
+                    self.data = data
+                    return True
             return True
         except KeyError:
             self.error_message = "Eines der Felder wurde nicht korrekt angegeben."
