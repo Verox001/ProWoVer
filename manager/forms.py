@@ -105,6 +105,10 @@ class ProjectCreationForm(forms.Form):
                     data["partner"] = old_partner.pk
                     self.data = data
                     return True
+            else:
+                data = self.data.copy()
+                data["partner"] = old_partner.pk
+                self.data = data
             return True
         except KeyError:
             self.error_message = "Eines der Felder wurde nicht korrekt angegeben."
