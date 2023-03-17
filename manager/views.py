@@ -54,35 +54,79 @@ class Index(View):
             # Sort Teachers by username
             teachers.sort(key=lambda a: a[1])
 
-            return render(request, self.template, context={
-                "success": True,
-                "teacher": request.user.role == request.user.TEACHER,
-                "projects": get_project_choices(),
-                "saving_succeed": request.GET.get("success") is not None and request.GET.get("success") == "1",
-                "saving_failed": request.GET.get("success") is not None and request.GET.get("success") == "0",
-                "error_message": "Unbekannter Fehler" if request.GET.get("error_message") is None else request.GET.get("error_message"),
-                "dazs_list": Project.DAZS,
-                "teachers": teachers,
-                "title": title,
-                "description": description,
-                "dazs": dazs,
-                "attendance": attendance,
-                "price": price,
-                "year": year,
-                "years":
-                    [
-                        (year.year, year.get_year_display() +
-                         f" noch "
-                         f"{year.projects - len(Project.objects.filter(year=year.year))}"
-                         f" Projekte")
-                        for year in Year.objects.all()
-                    ],
-                "other": other,
-                "partner": partner,
-                "permitted": permitted,
-                "left_success": request.GET.get("left_success") is not None and request.GET.get("left_success") == "1",
-                "left_error": request.GET.get("left_error") is not None and request.GET.get("left_error") == "1",
-            })
+            if request.user.role == User.TEACHER:
+                return render(request, self.template, context={
+                    "success": True,
+                    "teacher": request.user.role == request.user.TEACHER,
+                    "projects": get_project_choices(),
+                    "saving_succeed": request.GET.get("success") is not None and request.GET.get("success") == "1",
+                    "saving_failed": request.GET.get("success") is not None and request.GET.get("success") == "0",
+                    "error_message": "Unbekannter Fehler" if request.GET.get("error_message") is None else request.GET.get("error_message"),
+                    "dazs_list": Project.DAZS,
+                    "teachers": teachers,
+                    "title": title,
+                    "description": description,
+                    "dazs": dazs,
+                    "attendance": attendance,
+                    "price": price,
+                    "year": year,
+                    "years":
+                        [
+                            (year.year, year.get_year_display() +
+                             f" noch "
+                             f"{year.projects - len(Project.objects.filter(year=year.year))}"
+                             f" Projekte")
+                            for year in Year.objects.all()
+                        ],
+                    "other": other,
+                    "partner": partner,
+                    "permitted": permitted,
+                    "left_success": request.GET.get("left_success") is not None and request.GET.get("left_success") == "1",
+                    "left_error": request.GET.get("left_error") is not None and request.GET.get("left_error") == "1",
+                })
+            else:
+                project_one = ProjectUserConnection.objects.filter(user_id=request.user.pk, priority=1).first()
+                if project_one is not None:
+                    project_one = project_one.project.title.lower()
+                project_two = ProjectUserConnection.objects.filter(user_id=request.user.pk, priority=2).first()
+                if project_two is not None:
+                    project_two = project_two.project.title.lower()
+                project_three = ProjectUserConnection.objects.filter(user_id=request.user.pk, priority=3).first()
+                if project_three is not None:
+                    project_three = project_three.project.title.lower()
+
+                return render(request, self.template, context={
+                    "success": True,
+                    "teacher": request.user.role == request.user.TEACHER,
+                    "projects": [(project.title.lower(), project.title) for project in Project.objects.filter(year=request.user.year, dazs__lte=request.user.dazs)],
+                    "saving_succeed": request.GET.get("success") is not None and request.GET.get("success") == "1",
+                    "saving_failed": request.GET.get("success") is not None and request.GET.get("success") == "0",
+                    "error_message": "Unbekannter Fehler" if request.GET.get("error_message") is None else request.GET.get("error_message"),
+                    "dazs_list": Project.DAZS,
+                    "project_one": project_one,
+                    "project_two": project_two,
+                    "project_three": project_three,
+                    "teachers": teachers,
+                    "title": title,
+                    "description": description,
+                    "dazs": dazs,
+                    "attendance": attendance,
+                    "price": price,
+                    "year": year,
+                    "years":
+                        [
+                            (year.year, year.get_year_display() +
+                             f" noch "
+                             f"{year.projects - len(Project.objects.filter(year=year.year))}"
+                             f" Projekte")
+                            for year in Year.objects.all()
+                        ],
+                    "other": other,
+                    "partner": partner,
+                    "permitted": permitted,
+                    "left_success": request.GET.get("left_success") is not None and request.GET.get("left_success") == "1",
+                    "left_error": request.GET.get("left_error") is not None and request.GET.get("left_error") == "1",
+                })
         if request.GET.get("success") is not None:
             if request.GET.get("success") == "1":
                 return render(request, self.template, context={"logged_out": True})

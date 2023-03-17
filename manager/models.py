@@ -38,12 +38,19 @@ class User(AbstractUser):
         (TEACHER, 'Lehrer'),
         (STUDENT, 'Schüler'),
     )
+
+    DAZS = (
+        (1, "Sprachlerner"),
+        (2, "Fortgeschrittener Sprachlerner"),
+        (3, "Kein Sprachlerner")
+    )
     role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, default=STUDENT)
     user_id = models.BigAutoField(primary_key=True)
     email = models.EmailField(max_length=255, unique=True, blank=True, null=True)
     password = models.TextField(max_length=8000)
     students = models.IntegerField(default=12)
     year = models.PositiveBigIntegerField(choices=YEARS, blank=True, null=True)
+    dazs = models.PositiveSmallIntegerField(choices=DAZS, default=3)
 
     def __str__(self):
         return self.username
