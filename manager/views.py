@@ -95,10 +95,17 @@ class Index(View):
                 if project_three is not None:
                     project_three = project_three.project.title.lower()
 
+                projects = []
+                if request.user.dazs == 3:
+                    projects = [(project.title.lower(), project.title) for project in Project.objects.filter(year=request.user.year, dazs__lte=request.user.dazs)]
+
+                elif request.user.dazs == 1:
+                    projects = [(project.title.lower(), project.title) for project in Project.objects.filter(year__year__in=[2, 3, 4], dazs__lte=request.user.dazs)]
+
                 return render(request, self.template, context={
                     "success": True,
                     "teacher": request.user.role == request.user.TEACHER,
-                    "projects": [(project.title.lower(), project.title) for project in Project.objects.filter(year=request.user.year, dazs__lte=request.user.dazs)],
+                    "projects": projects,
                     "saving_succeed": request.GET.get("success") is not None and request.GET.get("success") == "1",
                     "saving_failed": request.GET.get("success") is not None and request.GET.get("success") == "0",
                     "error_message": "Unbekannter Fehler" if request.GET.get("error_message") is None else request.GET.get("error_message"),

@@ -56,11 +56,25 @@ class User(AbstractUser):
         return self.username
 
 
-'''with open("KuK_SuS_Einsatz.csv", "r") as f:
+'''with open("SuS.csv", "r", encoding="unicode_escape") as f:
     reader = csv.reader(f)
     for line in reader:
+        dazs = 3
+        if line[4].startswith("DaZ"):
+            if line[4].split("DaZ")[0] == "1":
+                dazs = 1
+            else:
+                dazs = 2
         try:
-            User.objects.get_or_create(username=line[0], students=int(line[1]), password=make_password(line[2]), role=2)
+            User.objects.get_or_create(
+                first_name=line[1],
+                last_name=line[0],
+                username=line[2],
+                password=make_password(line[3]),
+                dazs=dazs,
+                role=2,
+                year=(dazs == 3) if Year.objects.get(year=int(line[4])) else Year.objects.get(year=2)
+            )
         except IntegrityError: pass'''
 
 
