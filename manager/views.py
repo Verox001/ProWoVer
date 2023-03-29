@@ -97,10 +97,10 @@ class Index(View):
 
                 projects = []
                 if request.user.dazs == 3:
-                    projects = [(project.title.lower(), project.title) for project in Project.objects.filter(year=request.user.year, dazs__lte=request.user.dazs)]
+                    projects = [(project.title.lower(), [project.project_id, project.title]) for project in Project.objects.filter(year=request.user.year, dazs__lte=request.user.dazs)]
 
                 elif request.user.dazs == 1:
-                    projects = [(project.title.lower(), project.title) for project in Project.objects.filter(year__year__in=[2, 3, 4], dazs__lte=request.user.dazs)]
+                    projects = [(project.title.lower(), [project.project_id, project.title]) for project in Project.objects.filter(year__year__in=[2, 3, 4], dazs__lte=request.user.dazs)]
 
                 return render(request, self.template, context={
                     "success": True,
