@@ -56,15 +56,27 @@ class User(AbstractUser):
         return self.username
 
 
-'''with open("SuS.csv", "r", encoding="unicode_escape") as f:
+years = {
+    5: YEAR56,
+    6: YEAR56,
+    7: YEAR7,
+    8: YEAR8,
+    9: YEAR9,
+    10: YEAR10,
+    11: YEAR11,
+    12: YEAR12,
+}
+
+'''with open("SuS.csv", "r", encoding="utf8") as f:
     reader = csv.reader(f)
     for line in reader:
         dazs = 3
         if line[4].startswith("DaZ"):
-            if line[4].split("DaZ")[0] == "1":
+            if line[4].split("DaZ")[1] == "1":
                 dazs = 1
             else:
                 dazs = 2
+        print(dazs)
         try:
             User.objects.get_or_create(
                 first_name=line[1],
@@ -72,8 +84,8 @@ class User(AbstractUser):
                 username=line[2],
                 password=make_password(line[3]),
                 dazs=dazs,
-                role=2,
-                year=(dazs == 3) if Year.objects.get(year=int(line[4])) else Year.objects.get(year=2)
+                role=3,
+                year=years[int(line[4])] if (dazs == 3) else 2
             )
         except IntegrityError: pass'''
 
