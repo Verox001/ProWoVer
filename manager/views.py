@@ -172,9 +172,11 @@ class ProjectListView(View):
         if request.user.role == User.TEACHER:
             projects = Project.objects.all().order_by("year__year")
         else:
-            print(request.user.dazs)
             if request.user.dazs == 3:
                 projects = Project.objects.filter(year=request.user.year, dazs__lte=request.user.dazs)
+
+            elif request.user.dazs == 2:
+                projects = Project.objects.filter(year__year__in=[2, 3, 4], dazs__lte=request.user.dazs)
 
             elif request.user.dazs == 1:
                 projects = Project.objects.filter(year__year__in=[2, 3, 4], dazs__lte=request.user.dazs)
