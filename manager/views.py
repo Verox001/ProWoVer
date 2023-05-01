@@ -257,11 +257,10 @@ class ProjectLeaveView(View):
 
 def export_users_csv(request):
     # Erstellen Sie eine HTTP-Antwort mit dem richtigen MIME-Typ
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="schueler.csv"'
 
     # Erstellen Sie einen CSV-Schreiber
-    writer = csv.writer(response)
+    file = open("schueler.csv", "w")
+    writer = csv.writer(file, delimiter=';')
     # Schreiben Sie die Kopfzeile
     writer.writerow(['Nachname', 'Vorname', 'Jahrgang', '1. Wahl', '2. Wahl', '3. Wahl', 'Sprachlerner'])
 
@@ -283,4 +282,5 @@ def export_users_csv(request):
         # Schreiben Sie die Datenzeile
         writer.writerow([user.last_name, user.first_name, user.year, *project_titles, sprachlerner])
 
-    return response
+    file.close()
+    return []
