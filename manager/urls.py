@@ -9,5 +9,6 @@ urlpatterns = [
     path("logout/", views.LogoutView.as_view()),
     path("choose-project/", views.ProjectSelectionView.as_view()),
     path("update-project/", views.ProjectCreationView.as_view()),
-    path("leave-project/", views.ProjectLeaveView.as_view())
+    path("leave-project/", views.ProjectLeaveView.as_view()),
+    path('export/csv/', views.export_users_csv, name='export_users_csv'),
 ]

@@ -1,10 +1,11 @@
+import csv
+
 from django.contrib.auth import login, logout
 from django.contrib.auth.models import AnonymousUser
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.views import View
-from django.views.generic import FormView
 
 from manager.helper import get_project_choices
 from manager.models import Project, ProjectUserConnection, User, Year
@@ -252,3 +253,34 @@ class ProjectLeaveView(View):
             return HttpResponseRedirect("/?left_error=1")
         projects.delete()
         return HttpResponseRedirect("/?left_success=1")
+
+
+def export_users_csv(request):
+    # Erstellen Sie eine HTTP-Antwort mit dem richtigen MIME-Typ
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="schueler.csv"'
+
+    # Erstellen Sie einen CSV-Schreiber
+    writer = csv.writer(response)
+    # Schreiben Sie die Kopfzeile
+    writer.writerow(['Nachname', 'Vorname', 'Jahrgang', '1. Wahl', '2. Wahl', '3. Wahl', 'Sprachlerner'])
+
+    # Holen Sie alle Benutzer
+    users = User.objects.filter(role=User.STUDENT)
+
+    for user in users:
+        print(user.first_name)
+        # Holen Sie alle Projekte, bei denen der Benutzer beteiligt ist, sortiert nach Priorität
+        projects = ProjectUserConnection.objects.filter(user=user).order_by('priority')
+
+        # Extrahieren Sie die Titel der Projekte und füllen Sie die Liste auf 3 Elemente auf
+        project_titles = [p.project.title for p in projects[:3]]
+        project_titles += [''] * (3 - len(project_titles))
+
+        # Überprüfen Sie, ob der Benutzer ein Sprachlerner ist
+        sprachlerner = 'Ja' if user.dazs == 1 else 'Nein'
+
+        # Schreiben Sie die Datenzeile
+        writer.writerow([user.last_name, user.first_name, user.year, *project_titles, sprachlerner])
+
+    return response
