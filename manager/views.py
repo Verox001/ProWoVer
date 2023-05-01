@@ -276,11 +276,8 @@ def export_users_csv(request):
         project_titles = [p.project.title for p in projects[:3]]
         project_titles += [''] * (3 - len(project_titles))
 
-        # Überprüfen Sie, ob der Benutzer ein Sprachlerner ist
-        sprachlerner = 'Ja' if user.dazs == 1 else 'Nein'
-
         # Schreiben Sie die Datenzeile
-        writer.writerow([user.last_name, user.first_name, user.year, *project_titles, sprachlerner])
+        writer.writerow([user.last_name, user.first_name, user.get_year_display(), *project_titles, user.dazs])
 
     file.close()
     return []
